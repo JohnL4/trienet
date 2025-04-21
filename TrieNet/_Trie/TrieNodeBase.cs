@@ -16,6 +16,11 @@ namespace Gma.DataStructures.StringSearch
 
         protected abstract IEnumerable<TrieNodeBase<TValue>> Children();
 
+        /// <summary>
+        /// Count of descendants <em>including the current node</em>.  Probably has no meaning or validity outside of vanilla <see cref="TrieNode"/>.
+        /// </summary>
+        public long DescendantsCount { get; set; }
+
         public long Size() {
             return Children().Sum(o => o.Size()) + 1;
         }
@@ -26,10 +31,12 @@ namespace Gma.DataStructures.StringSearch
             if (EndOfString(position, key))
             {
                 AddValue(value);
+                DescendantsCount++;
                 return;
             }
 
             TrieNodeBase<TValue> child = GetOrCreateChild(key[position]);
+            DescendantsCount++;
             child.Add(key, position + 1, value);
         }
 
